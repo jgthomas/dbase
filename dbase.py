@@ -12,7 +12,8 @@ class Database:
     def __init__(self, dbname):
         self.db = dbname
         try:
-            self.conn = sqlite3.connect(self.db, detect_types=sqlite3.PARSE_DECLTYPES)
+            self.conn = sqlite3.connect(self.db,
+                                        detect_types=sqlite3.PARSE_DECLTYPES)
             self.conn.row_factory = sqlite3.Row
             self.cur = self.conn.cursor()
         except sqlite3.Error:
