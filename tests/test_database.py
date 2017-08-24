@@ -9,9 +9,9 @@ class DatabaseTests(unittest.TestCase):
         self.db = Database("unit_test.db")
 
     def setUp(self):
-        self.db.execute("CREATE TABLE test(
+        self.db.execute("""CREATE TABLE test(
                 id  INTEGER PRIMARY KEY, 
-                val TEXT)")
+                val TEXT)""")
 
     @classmethod
     def tearDownClass(self):
