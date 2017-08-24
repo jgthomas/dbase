@@ -8,6 +8,7 @@ class Database:
     Wrapper and utility methods for sqlite.
 
     """
+
     def __init__(self, dbname):
         self.db = dbname
         try:
