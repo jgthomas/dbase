@@ -5,17 +5,20 @@ from dbase import Database
 class DatabaseTests(unittest.TestCase):
 
     @classmethod
-    def setUpClass(self):
-        self.db = Database("unit_test.db")
+    def setUpClass(cls):
+        cls.db = Database("unit_test.db")
+
+    @classmethod
+    def tearDownClass(cls):
+        cls.db.execute("DROP TABLE IF EXISTS test")
 
     def setUp(self):
         self.db.execute("""CREATE TABLE test(
                 id  INTEGER PRIMARY KEY, 
                 val TEXT)""")
 
-    @classmethod
-    def tearDownClass(self):
-        self.db.execute("DROP TABLE IF EXISTS test")
+    def tearDown(self):
+        self.db.execute("DROP TABLE test")
 
     def test_insert_returns_last_row_id(self):
         self.assertEqual(self.db.execute(
