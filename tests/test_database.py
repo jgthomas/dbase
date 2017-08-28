@@ -1,4 +1,5 @@
 import unittest
+import os
 from dbase import Database
 
 
@@ -41,6 +42,7 @@ class DatabaseTests(unittest.TestCase):
     @classmethod
     def tearDownClass(cls):
         cls.db.execute("DROP TABLE IF EXISTS test")
+        os.remove("unit_test.db")
 
 
 if __name__ == '__main__':
