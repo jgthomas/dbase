@@ -8,17 +8,10 @@ class DatabaseTests(unittest.TestCase):
     def setUpClass(cls):
         cls.db = Database("unit_test.db")
 
-    @classmethod
-    def tearDownClass(cls):
-        cls.db.execute("DROP TABLE IF EXISTS test")
-
     def setUp(self):
         self.db.execute("""CREATE TABLE test(
                 id  INTEGER PRIMARY KEY, 
                 val TEXT)""")
-
-    def tearDown(self):
-        self.db.execute("DROP TABLE test")
 
     def test_insert_returns_last_row_id(self):
         """ INSERT returns id of last affected row. """
@@ -41,6 +34,13 @@ class DatabaseTests(unittest.TestCase):
             self.db.execute("INSERT INTO test(val) VALUES(?)", 
                             row["val"])
         self.assertEqual(self.db.execute("SELECT * FROM test"), rows)
+
+    def tearDown(self):
+        self.db.execute("DROP TABLE test")
+
+    @classmethod
+    def tearDownClass(cls):
+        cls.db.execute("DROP TABLE IF EXISTS test")
 
 
 if __name__ == '__main__':
