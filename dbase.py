@@ -40,12 +40,18 @@ class Database:
         try:
             with self.conn:
                 self.cur.execute(statement, params)
-                if re.search(r"^\s*SELECT", statement, re.IGNORECASE):
+                if re.search(r"^\s*SELECT",
+                             statement,
+                             re.IGNORECASE):
                     rows = self.cur.fetchall()
                     return [dict(row) for row in rows]
-                elif re.search(r"^\s*INSERT", statement, re.IGNORECASE):
+                elif re.search(r"^\s*INSERT",
+                               statement,
+                               re.IGNORECASE):
                     return self.cur.lastrowid
-                elif re.search(r"^\s*(?:DELETE|UPDATE)", statement, re.IGNORECASE):
+                elif re.search(r"^\s*(?:DELETE|UPDATE)",
+                               statement,
+                               re.IGNORECASE):
                     return self.cur.rowcount
                 return True
         except sqlite3.IntegrityError:
