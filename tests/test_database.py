@@ -1,6 +1,8 @@
 import unittest
 import os
 import csv
+import io
+import sys
 from dbase import Database
 
 
@@ -85,6 +87,16 @@ class DatabaseTests(unittest.TestCase):
         self.assertEqual(self.db.row_total("test"), 4)
         self.assertEqual(self.db.row_total("not_test"), None)
         self.assertEqual(self.db.row_total("empty_test"), 0)
+
+    def test_column_summary(self):
+        summary = ("ID, Name, Type, NotNull, DefaultVal, PrimaryKey\n"
+                   "0 id INTEGER 0 None 1\n"
+                   "1 val TEXT 0 None 0\n")
+        captured = io.StringIO()
+        sys.stdout = captured
+        self.db.column_summary("test")
+        sys.stdout = sys.__stdout__
+        self.assertMultiLineEqual(captured.getvalue(), summary)
 
     def test_to_csv(self):
         lines = [
