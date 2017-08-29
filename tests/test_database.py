@@ -36,6 +36,11 @@ class DatabaseTests(unittest.TestCase):
                             row["val"])
         self.assertEqual(self.db.execute("SELECT * FROM test"), rows)
 
+    def test_exists_table(self):
+        """ Return True if the table exists, else False. """
+        self.assertEquals(self.db.exists_table("test"), True)
+        self.assertEquals(self.db.exists_table("not_test"), False)
+
     def tearDown(self):
         self.db.execute("DROP TABLE test")
 
