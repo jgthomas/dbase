@@ -11,7 +11,8 @@ class DatabaseTests(unittest.TestCase):
         cls.rows = [
             {"id": 1, "val": "dog"},
             {"id": 2, "val": "cat"},
-            {"id": 3, "val": "man"}
+            {"id": 3, "val": "man"},
+            {"id": 4, "val": None}
         ]
 
     def setUp(self):
@@ -39,19 +40,19 @@ class DatabaseTests(unittest.TestCase):
         for row in self.rows:
             self.db.execute("INSERT INTO test(val) VALUES(?)", row["val"])
         self.assertEqual(self.db.execute(
-            "UPDATE test SET val=? WHERE id>?", 'puff', 1), 2)
+            "UPDATE test SET val=? WHERE id>?", 'puff', 1), 3)
 
     def test_delete_returns_affected_row_count(self):
         for row in self.rows:
             self.db.execute("INSERT INTO test(val) VALUES(?)", row["val"])
         self.assertEqual(self.db.execute(
-            "DELETE FROM test WHERE id>?", 1), 2)
+            "DELETE FROM test WHERE id>?", 1), 3)
 
     def test_delete_all(self):
         for row in self.rows:
             self.db.execute("INSERT INTO test(val) VALUES(?)", row["val"])
         self.assertEqual(self.db.execute(
-            "DELETE FROM test"), 3)
+            "DELETE FROM test"), 4)
 
     def test_exists_table(self):
         """ Return True if the table exists, else False. """
@@ -68,7 +69,7 @@ class DatabaseTests(unittest.TestCase):
         self.assertEqual(self.db.column_names("empty_test"), columns)
 
     def test_column_totals(self):
-        totals = {"id": 3, "val": 3}
+        totals = {"id": 4, "val": 3}
         not_totals = None
         empty_totals = {"id": 0, "val": 0}
         for row in self.rows:
@@ -80,7 +81,7 @@ class DatabaseTests(unittest.TestCase):
     def test_row_total(self):
         for row in self.rows:
             self.db.execute("INSERT INTO test(val) VALUES(?)", row["val"])
-        self.assertEqual(self.db.row_total("test"), 3)
+        self.assertEqual(self.db.row_total("test"), 4)
         self.assertEqual(self.db.row_total("not_test"), None)
         self.assertEqual(self.db.row_total("empty_test"), 0)
 
