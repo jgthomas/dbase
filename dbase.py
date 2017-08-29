@@ -13,8 +13,8 @@ class Database:
 
     """
 
-    def __init__(self, dbname, trace=None):
-        self.db = dbname
+    def __init__(self, db, trace=None):
+        self.db = db
         self.trace = trace
         try:
             self.conn = sqlite3.connect(self.db, detect_types=sqlite3.PARSE_DECLTYPES)

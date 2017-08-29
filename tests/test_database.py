@@ -1,5 +1,6 @@
 import unittest
 import os
+import csv
 from dbase import Database
 
 
@@ -85,6 +86,23 @@ class DatabaseTests(unittest.TestCase):
         self.assertEqual(self.db.row_total("not_test"), None)
         self.assertEqual(self.db.row_total("empty_test"), 0)
 
+    def test_to_csv(self):
+        lines = [
+                  ["id", "val"],
+                  ["1", "dog"],
+                  ["2", "cat"],
+                  ["3", "man"],
+                  ["4", ""]
+                ]
+
+        for row in self.rows:
+            self.db.execute("INSERT INTO test(val) VALUES(?)", row["val"])
+        self.db.to_csv("test")
+        with open("test.csv") as csvfile:
+            reader = csv.reader(csvfile)
+            csv_lines = list(reader)
+        self.assertListEqual(lines, csv_lines)
+
     def tearDown(self):
         self.db.execute("DROP TABLE test")
         self.db.execute("DROP TABLE empty_test")
@@ -94,6 +112,7 @@ class DatabaseTests(unittest.TestCase):
         cls.db.execute("DROP TABLE IF EXISTS test")
         cls.db.execute("DROP TABLE IF EXISTS empty_test")
         os.remove("unit_test.db")
+        os.remove("test.csv")
 
 
 if __name__ == '__main__':
