@@ -41,6 +41,12 @@ class DatabaseTests(unittest.TestCase):
         self.assertEquals(self.db.exists_table("test"), True)
         self.assertEquals(self.db.exists_table("not_test"), False)
 
+    def test_columns(self):
+        """ FIX: for table that exists but has no data. """
+        columns = ("id", "val")
+        self.assertEquals(self.db.columns("test"), columns)
+        self.assertEquals(self.db.columns("not_test"), None)
+    
     def tearDown(self):
         self.db.execute("DROP TABLE test")
 
