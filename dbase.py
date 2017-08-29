@@ -16,8 +16,7 @@ class Database:
     def __init__(self, dbname, trace=None):
         self.db = dbname
         try:
-            self.conn = sqlite3.connect(self.db,
-                                        detect_types=sqlite3.PARSE_DECLTYPES)
+            self.conn = sqlite3.connect(self.db, detect_types=sqlite3.PARSE_DECLTYPES)
             self.conn.row_factory = sqlite3.Row
             self.conn.set_trace_callback(trace)
             self.cur = self.conn.cursor()
