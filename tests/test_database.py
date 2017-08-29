@@ -9,9 +9,9 @@ class DatabaseTests(unittest.TestCase):
     def setUpClass(cls):
         cls.db = Database("unit_test.db")
         cls.rows = [
-            {"id": 1, "val": "foo"},
-            {"id": 2, "val": "bar"},
-            {"id": 3, "val": "baz"}
+            {"id": 1, "val": "dog"},
+            {"id": 2, "val": "cat"},
+            {"id": 3, "val": "man"}
         ]
 
     def setUp(self):
