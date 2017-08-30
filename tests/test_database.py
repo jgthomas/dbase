@@ -43,7 +43,7 @@ class DatabaseTests(unittest.TestCase):
             "INSERT INTO test(val) VALUES('two')"), 2)
 
     def test_replace_returns_last_row_id(self):
-        """ REPLACE allows deletion and replacement of indexed values. """
+        """ REPLACE allows deletion and insertion of changed indexed values. """
         for row in self.rows:
             self.db.execute("INSERT INTO test(val, age) VALUES(?, ?)",
                             row["val"], row["age"])
