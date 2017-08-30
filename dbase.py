@@ -154,7 +154,7 @@ class Database:
                     statement = statement.strip()
                     if re.search((r"^\s*(?:DELETE|UPDATE|INSERT"
                                   r"|REPLACE|DROP|CREATE|ALTER)"),
-                                 statement, re.IGNORECASE):
+                                 statement, re.I):
                         print("Executing: '{0}' will permanently "
                               "alter the database!\n"
                               .format(statement))
