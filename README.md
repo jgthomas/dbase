@@ -18,4 +18,4 @@ Collects together a number of useful python sqlite features into a single, conve
 
 ## iter_table
 
-Turns a database table into an iterable
+Turns a database table into an iterable.
