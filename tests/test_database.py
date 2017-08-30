@@ -77,7 +77,6 @@ class DatabaseTests(unittest.TestCase):
             "DELETE FROM test"), 4)
 
     def test_exists_table(self):
-        """ Return True if the table exists, else False. """
         self.assertEqual(self.db.exists_table("test"), True)
         self.assertEqual(self.db.exists_table("not_test"), False)
 
