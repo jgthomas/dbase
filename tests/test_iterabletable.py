@@ -32,7 +32,13 @@ class IterableTableTests(unittest.TestCase):
         self.assertEqual(self.table.take(2), taken)
 
     def test_take_beyond_range(self):
-        self.assertRaises((StopIteration, IndexError), self.table.take(10))
+        with self.assertRaises(IndexError) as r:
+            self.table.take(10)
+        self.assertIn("IterableTable index out of range", str(r.exception))
+
+    def test_head_returns_one(self):
+        taken = [{"id": 1, "name": "dog", "age": 10}]
+        self.assertEqual(self.table.head(), taken)
 
     @classmethod
     def tearDownClass(cls):
