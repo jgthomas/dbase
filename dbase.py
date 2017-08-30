@@ -62,7 +62,7 @@ class Database:
             return None
 
     def exists_table(self, table):
-        """ Check that table exists. """
+        """ Check that table exists, guard against SQL injection. """
         query = """SELECT 1
                      FROM sqlite_master
                     WHERE type = 'table'
