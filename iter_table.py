@@ -17,6 +17,12 @@ class IterableTable:
     def __repr__(self):
         return "IterableTable({0}, {1})".format(self.dbname, self.table)
 
+    def __str__(self):
+        return ("Iterable Table\n"
+                "Database filename: {0}\n"
+                "Table-iterable: {1}\n"
+                .format(self.dbname, self.table))
+
     def exists_table(self):
         return self._db.exists_table(self.table)
 
