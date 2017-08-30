@@ -20,13 +20,13 @@ class DatabaseTests(unittest.TestCase):
 
     def setUp(self):
         self.db.execute("""CREATE TABLE test(
-                id  INTEGER PRIMARY KEY, 
+                id   INTEGER PRIMARY KEY,
                 name TEXT,
-                age INTEGER)""")
+                age  INTEGER)""")
         self.db.execute("""CREATE TABLE empty_test(
-                id  INTEGER PRIMARY KEY,
+                id   INTEGER PRIMARY KEY,
                 name TEXT,
-                age INTEGER)""")
+                age  INTEGER)""")
 
     def test_select_returns_list_of_row_as_dicts(self):
         self.assertEqual(self.db.execute("SELECT * FROM test"), [])

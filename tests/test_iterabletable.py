@@ -10,9 +10,9 @@ class IterableTableTests(unittest.TestCase):
     def setUpClass(cls):
         cls.db = Database("unit_test.db")
         cls.db.execute("""CREATE TABLE test(
-                id  INTEGER PRIMARY KEY, 
+                id   INTEGER PRIMARY KEY,
                 name TEXT,
-                age INTEGER)""")
+                age  INTEGER)""")
         cls.rows = [
                 {"id": 1, "name": "dog", "age": 10},
                 {"id": 2, "name": "cat", "age": 20},
