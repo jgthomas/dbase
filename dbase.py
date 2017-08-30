@@ -155,15 +155,14 @@ class Database:
                     if re.search((r"^\s*(?:DELETE|UPDATE|INSERT"
                                   r"|REPLACE|DROP|CREATE|ALTER)"),
                                  statement, re.IGNORECASE):
-                                    print("Executing: '{0}' "
-                                          "will permanently "
-                                          "alter the database!\n"
-                                          .format(statement))
-                                    confirm = input(confirmation).lower()
-                                    if confirm not in ["y", "yes"]:
-                                        statement = ""
-                                        continue
-                                    self.cur.execute(statement)
+                        print("Executing: '{0}' will permanently "
+                              "alter the database!\n"
+                              .format(statement))
+                        confirm = input(confirmation).lower()
+                        if confirm not in ["y", "yes"]:
+                            statement = ""
+                            continue
+                        self.cur.execute(statement)
                     elif statement.upper().startswith("SELECT"):
                         print(self.execute(statement))
                     else:
