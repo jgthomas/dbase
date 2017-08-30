@@ -38,9 +38,9 @@ class DatabaseTests(unittest.TestCase):
 
     def test_insert_returns_last_row_id(self):
         self.assertEqual(self.db.execute(
-            "INSERT INTO test(val) VALUES('one')"), 1)
+            "INSERT INTO test(val, age) VALUES(?, ?)", "wolf", 23), 1)
         self.assertEqual(self.db.execute(
-            "INSERT INTO test(val) VALUES('two')"), 2)
+            "INSERT INTO test(val, age) VALUES(?, ?)", "tiger", 12), 2)
 
     def test_replace_returns_last_row_id(self):
         """ REPLACE allows deletion and insertion of changed indexed values. """
