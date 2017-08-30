@@ -57,7 +57,8 @@ class DatabaseTests(unittest.TestCase):
 
     def test_update_returns_affected_row_count(self):
         for row in self.rows:
-            self.db.execute("INSERT INTO test(val) VALUES(?)", row["val"])
+            self.db.execute("INSERT INTO test(val, age) VALUES(?, ?)",
+                            row["val"], row["age"])
         self.assertEqual(self.db.execute(
             "UPDATE test SET val=? WHERE id>?", 'puff', 1), 3)
 
