@@ -17,7 +17,8 @@ class Database:
         self.db = db
         self.trace = trace
         try:
-            self.conn = sqlite3.connect(self.db, detect_types=sqlite3.PARSE_DECLTYPES)
+            self.conn = sqlite3.connect(self.db,
+                                        detect_types=sqlite3.PARSE_DECLTYPES)
             self.conn.row_factory = sqlite3.Row
             self.conn.set_trace_callback(self.trace)
             self.cur = self.conn.cursor()
@@ -50,12 +51,12 @@ class Database:
         try:
             with self.conn:
                 self.cur.execute(statement, params)
-                if re.search(r"^\s*SELECT", statement, re.IGNORECASE):
+                if re.search(r"^\s*SELECT", statement, re.I):
                     rows = self.cur.fetchall()
                     return [dict(row) for row in rows]
-                elif re.search(r"^\s*(?:INSERT|REPLACE)", statement, re.IGNORECASE):
+                elif re.search(r"^\s*(?:INSERT|REPLACE)", statement, re.I):
                     return self.cur.lastrowid
-                elif re.search(r"^\s*(?:DELETE|UPDATE)", statement, re.IGNORECASE):
+                elif re.search(r"^\s*(?:DELETE|UPDATE)", statement, re.I):
                     return self.cur.rowcount
                 return True
         except sqlite3.IntegrityError:
@@ -130,6 +131,7 @@ class Database:
                     "'clear' : reset statement buffer\n"
                     "'state' : show statement buffer\n")
         prompt = "{0}>".format(self.db)
+        confirmation = "Is this OK (y/n): "
         statement = ""
         print(welcome)
         print(commands)
@@ -150,11 +152,14 @@ class Database:
             if sqlite3.complete_statement(statement):
                 try:
                     statement = statement.strip()
-                    if re.search(r"^\s*(?:DELETE|UPDATE|INSERT|REPLACE|DROP|CREATE|ALTER)",
+                    if re.search((r"^\s*(?:DELETE|UPDATE|INSERT"
+                                  r"|REPLACE|DROP|CREATE|ALTER)"),
                                  statement, re.IGNORECASE):
-                                    print("Executing: '{0}' will permanently "
-                                          "alter the database!\n".format(statement))
-                                    confirm = input("Is this ok (y/n): ").lower()
+                                    print("Executing: '{0}' "
+                                          "will permanently "
+                                          "alter the database!\n"
+                                          .format(statement))
+                                    confirm = input(confirmation).lower()
                                     if confirm not in ["y", "yes"]:
                                         statement = ""
                                         continue
