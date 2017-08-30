@@ -24,6 +24,10 @@ class IterableTableTests(unittest.TestCase):
                             row["name"], row["age"])
         cls.table = IterableTable("unit_test.db", "test")
 
+    def test_repr(self):
+        table_repr = "IterableTable(unit_test.db, test)"
+        self.assertEqual(self.table.__repr__(), table_repr)
+
     def test_take_items_from_table(self):
         taken = [
                   {"id": 1, "name": "dog", "age": 10},

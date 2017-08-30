@@ -10,14 +10,15 @@ class IterableTable:
     """
 
     def __init__(self, dbname, table):
-        self._db = Database(dbname)
+        self.dbname = dbname
+        self._db = Database(self.dbname)
         self.table = table
+
+    def __repr__(self):
+        return "IterableTable({0}, {1})".format(self.dbname, self.table)
 
     def exists_table(self):
         return self._db.exists_table(self.table)
-
-    def columns(self):
-        return self._db.columns(self.table)
 
     def __getitem__(self, item):
         if self.exists_table:
