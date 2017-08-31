@@ -112,7 +112,7 @@ class Database:
             return result["row_total"]
 
     def to_csv(self, table, outfile=None):
-        """ Convert table to csv. """
+        """ Convert table to csv file. """
         if self.exists_table(table):
             rows = self.execute("SELECT * FROM {0}".format(table))
             fieldnames = self.column_names(table)
