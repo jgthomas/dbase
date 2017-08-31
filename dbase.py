@@ -7,9 +7,9 @@ class Database:
     """
     Wrapper and utility methods for sqlite.
 
-    dbname  :  Name of the database file.
-    trace   :  An optional callback function to log or
-               print each SQL statement as executed.
+    db     :  Name of the database file.
+    trace  :  An optional callback function to log or
+              print each SQL statement as executed.
 
     """
 
