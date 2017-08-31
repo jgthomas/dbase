@@ -115,10 +115,10 @@ class Database:
         """ Convert table to csv. """
         if self.exists_table(table):
             rows = self.execute("SELECT * FROM {0}".format(table))
+            fieldnames = self.column_names(table)
             if not outfile:
                 outfile = ''.join([table, ".csv"])
             with open(outfile, 'w') as csvfile:
-                fieldnames = self.column_names(table)
                 dict_writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
                 dict_writer.writeheader()
                 dict_writer.writerows(rows)
