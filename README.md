@@ -3,7 +3,7 @@ Sqlite wrapper classes for python with various utility methods.
 
 ## dbase
 
-Collects together a number of useful python sqlite features into a single, convenient object.
+Collects together a number of useful python sqlite features:
 
 * context manager for the database connection
 
