@@ -15,13 +15,17 @@ class IterableTable:
         self.table = table
 
     def __repr__(self):
-        return "IterableTable({0}, {1})".format(self.dbname, self.table)
+        return "{0}({1}, {2})".format(self.__class__.__name__,
+                                      self.dbname,
+                                      self.table)
 
     def __str__(self):
-        return ("Iterable Table\n"
-                "Database filename: {0}\n"
-                "Table-iterable: {1}\n"
-                .format(self.dbname, self.table))
+        return ("{0}\n"
+                "Database filename: {1}\n"
+                "Table-iterable: {2}\n"
+                .format(self.__class__.__name__,
+                        self.dbname,
+                        self.table))
 
     def exists_table(self):
         return self._db.exists_table(self.table)
