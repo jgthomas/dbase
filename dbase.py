@@ -37,13 +37,15 @@ class Database:
         self.close()
 
     def __repr__(self):
-        return "Database('{0}', trace={1})".format(self.db, self.trace)
+        return ("{0}('{1}', trace={2})"
+                .format(self.__class__.__name__, self.db, self.trace))
 
     def __str__(self):
-        return ("Database connection\n"
-                "Database filename: {0}\n"
-                "Traceback function: {1}\n"
-                .format(self.db,
+        return ("{0} connection\n"
+                "Database filename: {1}\n"
+                "Traceback function: {2}\n"
+                .format(self.__class__.__name__,
+                        self.db,
                         self.trace))
 
     def execute(self, statement, *params):
