@@ -72,22 +72,12 @@ class Database:
                       AND name = ?"""
         return self.cur.execute(query, (table,)).fetchone() is not None
 
-    def column_data(self, table):
-        """ Return data on columns. """
-        if self.exists_table(table):
-            self.cur.execute("PRAGMA TABLE_INFO({0})".format(table))
-            return self.cur.fetchall()
-
-    def column_names(self, table):
-        """ Return column names. """
-        column_data = self.column_data(table)
-        if column_data:
-            return [name for _, name, *_ in column_data]
-
     def col_names(self, columns):
+        """ Return column names. """
         return [column["name"] for column in columns]
 
     def column_config(self, table):
+        """ Return data about columns. """
         if self.exists_table(table):
             column_data = self.execute("PRAGMA TABLE_INFO({0})".format(table))
             column_names = self.col_names(column_data)
@@ -103,7 +93,10 @@ class Database:
     def column_totals(self, table):
         """ Return number of non-null values in each column. """
         column_total_values = {}
-        column_names = self.column_names(table)
+        try:
+            column_names = self.column_config(table).keys()
+        except AttributeError:
+            column_names = None
         if column_names:
             for column_name in column_names:
                 data, *_ = self.execute(
@@ -114,17 +107,17 @@ class Database:
                 column_total_values[column_name] = data["column_total"]
             return column_total_values
 
-    def to_csv(self, table, outfile=None):
-        """ Convert table to csv file. """
-        if self.exists_table(table):
-            rows = self.execute("SELECT * FROM {0}".format(table))
-            fieldnames = self.column_names(table)
-            if not outfile:
-                outfile = ''.join([table, ".csv"])
-            with open(outfile, 'w') as csvfile:
-                dict_writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
-                dict_writer.writeheader()
-                dict_writer.writerows(rows)
+    #def to_csv(self, table, outfile=None):
+    #    """ Convert table to csv file. """
+    #    if self.exists_table(table):
+    #        rows = self.execute("SELECT * FROM {0}".format(table))
+    #        fieldnames = self.column_names(table)
+    #        if not outfile:
+    #            outfile = ''.join([table, ".csv"])
+    #        with open(outfile, 'w') as csvfile:
+    #            dict_writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
+    #            dict_writer.writeheader()
+    #            dict_writer.writerows(rows)
 
     def shell(self):
         welcome = "\nSimple sqlite shell"

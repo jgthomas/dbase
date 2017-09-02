@@ -82,15 +82,6 @@ class DatabaseTests(unittest.TestCase):
         self.assertEqual(self.db.exists_table("empty_test"), True)
         self.assertEqual(self.db.exists_table("not_test"), False)
 
-    def test_column_names(self):
-        columns = ["id", "name", "age"]
-        for row in self.rows:
-            self.db.execute("INSERT INTO test(name, age) VALUES(?, ?)",
-                            row["name"], row["age"])
-        self.assertEqual(self.db.column_names("test"), columns)
-        self.assertEqual(self.db.column_names("not_test"), None)
-        self.assertEqual(self.db.column_names("empty_test"), columns)
-
     def test_col_names(self):
         column_names = ["id", "name", "age"]
         for row in self.rows:
@@ -145,28 +136,28 @@ class DatabaseTests(unittest.TestCase):
         for row in self.rows:
             self.db.execute("INSERT INTO test(name, age) VALUES(?, ?)",
                             row["name"], row["age"])
-        self.assertEqual(self.db.column_totals("test"), totals)
+        self.assertDictEqual(self.db.column_totals("test"), totals)
         self.assertEqual(self.db.column_totals("not_test"), not_totals)
-        self.assertEqual(self.db.column_totals("empty_test"), empty_totals)
+        self.assertDictEqual(self.db.column_totals("empty_test"), empty_totals)
 
-    def test_to_csv(self):
-        lines = [
-                  ["id", "name", "age"],
-                  ["1", "dog", "10"],
-                  ["2", "cat", "20"],
-                  ["3", "man", "30"],
-                  ["4", "rat", ""]
-        ]
+    #def test_to_csv(self):
+    #    lines = [
+    #              ["id", "name", "age"],
+    #              ["1", "dog", "10"],
+    #              ["2", "cat", "20"],
+    #              ["3", "man", "30"],
+    #              ["4", "rat", ""]
+    #    ]
 
-        for row in self.rows:
-            self.db.execute("INSERT INTO test(name, age) VALUES(?, ?)",
-                            row["name"], row["age"])
-        self.db.to_csv("test")
-        with open("test.csv") as csvfile:
-            reader = csv.reader(csvfile)
-            csv_lines = list(reader)
-        self.assertListEqual(lines[0], csv_lines[0])
-        self.assertListEqual(sorted(lines), sorted(csv_lines))
+    #    for row in self.rows:
+    #        self.db.execute("INSERT INTO test(name, age) VALUES(?, ?)",
+    #                        row["name"], row["age"])
+    #    self.db.to_csv("test")
+    #    with open("test.csv") as csvfile:
+    #        reader = csv.reader(csvfile)
+    #        csv_lines = list(reader)
+    #    self.assertListEqual(lines[0], csv_lines[0])
+    #    self.assertListEqual(sorted(lines), sorted(csv_lines))
 
     def tearDown(self):
         self.db.execute("DROP TABLE test")
@@ -177,7 +168,7 @@ class DatabaseTests(unittest.TestCase):
         cls.db.execute("DROP TABLE IF EXISTS test")
         cls.db.execute("DROP TABLE IF EXISTS empty_test")
         os.remove("unit_test.db")
-        os.remove("test.csv")
+        #os.remove("test.csv")
 
 
 if __name__ == '__main__':
