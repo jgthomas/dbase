@@ -34,7 +34,7 @@ class DatabaseTests(unittest.TestCase):
             self.db.execute("INSERT INTO test(name, age) VALUES(?, ?)",
                             row["name"], row["age"])
         self.assertEqual(self.db.execute(
-            "SELECT * FROM test"), self.rows)
+            "SELECT * FROM test ORDER BY id"), self.rows)
 
     def test_insert_returns_last_row_id(self):
         self.assertEqual(self.db.execute(
