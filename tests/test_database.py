@@ -115,6 +115,16 @@ class DatabaseTests(unittest.TestCase):
             self.db.execute("INSERT INTO test(name, age) VALUES(?, ?)",
                             row["name"], row["age"])
         self.assertDictEqual(self.db.columns("test"), summary)
+        self.assertDictEqual(self.db.columns("empty_test"), summary)
+        self.assertEqual(self.db.columns("not_test"), None)
+
+    def test_row_summary(self):
+        for row in self.rows:
+            self.db.execute("INSERT INTO test(name, age) VALUES(?, ?)",
+                            row["name"], row["age"])
+        self.assertEqual(self.db.row_total("test"), 4)
+        self.assertEqual(self.db.row_total("not_test"), None)
+        self.assertEqual(self.db.row_total("empty_test"), 0)
 
     def test_column_totals(self):
         totals = {"id": 4, "name": 4, "age": 3}

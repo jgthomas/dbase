@@ -91,8 +91,14 @@ class Database:
         if self.exists_table(table):
             column_data = self.execute("PRAGMA TABLE_INFO({0})".format(table))
             column_names = self.col_names(column_data)
-        return dict(zip(column_names, column_data))
+            return dict(zip(column_names, column_data))
 
+    def rows(self, table):
+        """ Return number of rows in the table. """
+        if self.exists_table(table):
+            result, *_ = self.execute(
+                "SELECT COUNT(*) AS row_total FROM {}".format(table))
+            return result["row_total"]
 
     def column_summary(self, table):
         """ Print summary of column details. """
