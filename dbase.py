@@ -72,7 +72,7 @@ class Database:
                       AND name = ?"""
         return self.cur.execute(query, (table,)).fetchone() is not None
 
-    def col_names(self, columns):
+    def _column_names(self, columns):
         """ Return column names. """
         return [column["name"] for column in columns]
 
@@ -80,7 +80,7 @@ class Database:
         """ Return data about columns. """
         if self.exists_table(table):
             column_data = self.execute("PRAGMA TABLE_INFO({0})".format(table))
-            column_names = self.col_names(column_data)
+            column_names = self._column_names(column_data)
             return dict(zip(column_names, column_data))
 
     def row_count(self, table):

@@ -82,17 +82,17 @@ class DatabaseTests(unittest.TestCase):
         self.assertEqual(self.db.exists_table("empty_test"), True)
         self.assertEqual(self.db.exists_table("not_test"), False)
 
-    def test_col_names(self):
+    def test_column_names(self):
         column_names = ["id", "name", "age"]
         for row in self.rows:
             self.db.execute("INSERT INTO test(name, age) VALUES(?, ?)",
                             row["name"], row["age"])
         columns = self.db.execute("PRAGMA TABLE_INFO(test)")
-        self.assertListEqual(self.db.col_names(columns), column_names)
+        self.assertListEqual(self.db._column_names(columns), column_names)
         columns = self.db.execute("PRAGMA TABLE_INFO(empty_test)")
-        self.assertListEqual(self.db.col_names(columns), column_names)
+        self.assertListEqual(self.db._column_names(columns), column_names)
         columns = self.db.execute("PRAGMA TABLE_INFO(not_test)")
-        self.assertListEqual(self.db.col_names(columns), [])
+        self.assertListEqual(self.db._column_names(columns), [])
 
     def test_column_config(self):
         summary = {"id": {"cid": 0,
