@@ -91,6 +91,18 @@ class DatabaseTests(unittest.TestCase):
         self.assertEqual(self.db.column_names("not_test"), None)
         self.assertEqual(self.db.column_names("empty_test"), columns)
 
+    def test_col_names(self):
+        column_names = ["id", "name", "age"]
+        for row in self.rows:
+            self.db.execute("INSERT INTO test(name, age) VALUES(?, ?)",
+                            row["name"], row["age"])
+        columns = self.db.execute("PRAGMA TABLE_INFO(test)")
+        self.assertListEqual(self.db.col_names(columns), column_names)
+        columns = self.db.execute("PRAGMA TABLE_INFO(empty_test)")
+        self.assertListEqual(self.db.col_names(columns), column_names)
+        columns = self.db.execute("PRAGMA TABLE_INFO(not_test)")
+        self.assertListEqual(self.db.col_names(columns), [])
+
     def test_column_summary_method(self):
         summary = {"id": {"cid": 0,
                           "name":"id",
@@ -118,13 +130,13 @@ class DatabaseTests(unittest.TestCase):
         self.assertDictEqual(self.db.columns("empty_test"), summary)
         self.assertEqual(self.db.columns("not_test"), None)
 
-    def test_row_summary(self):
+    def test_row_count(self):
         for row in self.rows:
             self.db.execute("INSERT INTO test(name, age) VALUES(?, ?)",
                             row["name"], row["age"])
-        self.assertEqual(self.db.row_total("test"), 4)
-        self.assertEqual(self.db.row_total("not_test"), None)
-        self.assertEqual(self.db.row_total("empty_test"), 0)
+        self.assertEqual(self.db.row_count("test"), 4)
+        self.assertEqual(self.db.row_count("not_test"), None)
+        self.assertEqual(self.db.row_count("empty_test"), 0)
 
     def test_column_totals(self):
         totals = {"id": 4, "name": 4, "age": 3}
@@ -144,17 +156,6 @@ class DatabaseTests(unittest.TestCase):
         self.assertEqual(self.db.row_total("test"), 4)
         self.assertEqual(self.db.row_total("not_test"), None)
         self.assertEqual(self.db.row_total("empty_test"), 0)
-
-    def test_column_summary(self):
-        summary = ("ID, Name, Type, NotNull, DefaultVal, PrimaryKey\n"
-                   "0 id INTEGER 0 None 1\n"
-                   "1 name TEXT 0 None 0\n"
-                   "2 age INTEGER 0 None 0\n")
-        captured_output = io.StringIO()
-        sys.stdout = captured_output
-        self.db.column_summary("test")
-        sys.stdout = sys.__stdout__
-        self.assertMultiLineEqual(captured_output.getvalue(), summary)
 
     def test_to_csv(self):
         lines = [

@@ -93,20 +93,12 @@ class Database:
             column_names = self.col_names(column_data)
             return dict(zip(column_names, column_data))
 
-    def rows(self, table):
+    def row_count(self, table):
         """ Return number of rows in the table. """
         if self.exists_table(table):
             result, *_ = self.execute(
                 "SELECT COUNT(*) AS row_total FROM {}".format(table))
             return result["row_total"]
-
-    def column_summary(self, table):
-        """ Print summary of column details. """
-        column_data = self.column_data(table)
-        if column_data:
-            print("ID, Name, Type, NotNull, DefaultVal, PrimaryKey")
-            for column in column_data:
-                print(*column)
 
     def column_totals(self, table):
         """ Return number of non-null values in each column. """
