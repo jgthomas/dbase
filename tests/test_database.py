@@ -84,12 +84,11 @@ class DatabaseTests(unittest.TestCase):
 
     def test_column_names(self):
         columns = ["id", "name", "age"]
-        not_columns = None
         for row in self.rows:
             self.db.execute("INSERT INTO test(name, age) VALUES(?, ?)",
                             row["name"], row["age"])
         self.assertEqual(self.db.column_names("test"), columns)
-        self.assertEqual(self.db.column_names("not_test"), not_columns)
+        self.assertEqual(self.db.column_names("not_test"), None)
         self.assertEqual(self.db.column_names("empty_test"), columns)
 
     def test_column_totals(self):
