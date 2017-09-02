@@ -48,22 +48,6 @@ class Database:
                         self.db,
                         self.trace))
 
-    def execute(self, statement, *params):
-        """ Execute SQL statement, returning appropriately. """
-        try:
-            with self.conn:
-                self.cur.execute(statement, params)
-                if re.search(r"^\s*(?:SELECT|PRAGMA)", statement, re.I):
-                    rows = self.cur.fetchall()
-                    return [dict(row) for row in rows]
-                elif re.search(r"^\s*(?:INSERT|REPLACE)", statement, re.I):
-                    return self.cur.lastrowid
-                elif re.search(r"^\s*(?:DELETE|UPDATE)", statement, re.I):
-                    return self.cur.rowcount
-                return True
-        except sqlite3.IntegrityError:
-            return None
-
     def exists_table(self, table):
         """ Check that table exists, guard against SQL injection. """
         query = """SELECT 1
@@ -118,6 +102,22 @@ class Database:
     #            dict_writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
     #            dict_writer.writeheader()
     #            dict_writer.writerows(rows)
+
+    def execute(self, statement, *params):
+        """ Execute SQL statement, returning appropriately. """
+        try:
+            with self.conn:
+                self.cur.execute(statement, params)
+                if re.search(r"^\s*(?:SELECT|PRAGMA)", statement, re.I):
+                    rows = self.cur.fetchall()
+                    return [dict(row) for row in rows]
+                elif re.search(r"^\s*(?:INSERT|REPLACE)", statement, re.I):
+                    return self.cur.lastrowid
+                elif re.search(r"^\s*(?:DELETE|UPDATE)", statement, re.I):
+                    return self.cur.rowcount
+                return True
+        except sqlite3.IntegrityError:
+            return None
 
     def shell(self):
         welcome = "\nSimple sqlite shell"
