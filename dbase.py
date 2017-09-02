@@ -84,6 +84,14 @@ class Database:
         if column_data:
             return [name for _, name, *_ in column_data]
 
+    def column_summary(self, table):
+        """ Print summary of column details. """
+        column_data = self.column_data(table)
+        if column_data:
+            print("ID, Name, Type, NotNull, DefaultVal, PrimaryKey")
+            for column in column_data:
+                print(*column)
+
     def column_totals(self, table):
         """ Return number of non-null values in each column. """
         column_total_values = {}
@@ -97,14 +105,6 @@ class Database:
                            IS NOT NULL""".format(column_name, table))
                 column_total_values[column_name] = data["column_total"]
             return column_total_values
-
-    def column_summary(self, table):
-        """ Print summary of column details. """
-        column_data = self.column_data(table)
-        if column_data:
-            print("ID, Name, Type, NotNull, DefaultVal, PrimaryKey")
-            for column in column_data:
-                print(*column)
 
     def row_total(self, table):
         """ Return number of rows in the table. """
