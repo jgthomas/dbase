@@ -17,6 +17,7 @@ class DatabaseTests(unittest.TestCase):
                 {"id": 3, "name": "man", "age": 30},
                 {"id": 4, "name": "rat", "age": None}
         ]
+        cls.maxDiff = None
 
     def setUp(self):
         self.db.execute("""CREATE TABLE test(
@@ -89,6 +90,31 @@ class DatabaseTests(unittest.TestCase):
         self.assertEqual(self.db.column_names("test"), columns)
         self.assertEqual(self.db.column_names("not_test"), None)
         self.assertEqual(self.db.column_names("empty_test"), columns)
+
+    def test_column_summary_method(self):
+        summary = {"id": {"cid": 0,
+                          "name":"id",
+                          "notnull": 0,
+                          "type":"INTEGER",
+                          "dflt_value": None,
+                          "pk": 1},
+                   "name": {"cid": 1,
+                            "name": "name",
+                            "notnull": 0,
+                            "type":"TEXT",
+                            "dflt_value": None,
+                            "pk": 0},
+                   "age": {"cid": 2,
+                           "name": "age",
+                           "notnull": 0, "type":
+                           "INTEGER",
+                           "dflt_value": None,
+                           "pk": 0}
+                   }
+        for row in self.rows:
+            self.db.execute("INSERT INTO test(name, age) VALUES(?, ?)",
+                            row["name"], row["age"])
+        self.assertDictEqual(self.db.columns("test"), summary)
 
     def test_column_totals(self):
         totals = {"id": 4, "name": 4, "age": 3}

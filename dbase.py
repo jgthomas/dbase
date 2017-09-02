@@ -53,7 +53,7 @@ class Database:
         try:
             with self.conn:
                 self.cur.execute(statement, params)
-                if re.search(r"^\s*SELECT", statement, re.I):
+                if re.search(r"^\s*(?:SELECT|PRAGMA)", statement, re.I):
                     rows = self.cur.fetchall()
                     return [dict(row) for row in rows]
                 elif re.search(r"^\s*(?:INSERT|REPLACE)", statement, re.I):
@@ -83,6 +83,16 @@ class Database:
         column_data = self.column_data(table)
         if column_data:
             return [name for _, name, *_ in column_data]
+
+    def col_names(self, columns):
+        return [column["name"] for column in columns]
+
+    def columns(self, table):
+        if self.exists_table(table):
+            column_data = self.execute("PRAGMA TABLE_INFO({0})".format(table))
+            column_names = self.col_names(column_data)
+        return dict(zip(column_names, column_data))
+
 
     def column_summary(self, table):
         """ Print summary of column details. """
