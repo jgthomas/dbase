@@ -138,7 +138,7 @@ class DatabaseTests(unittest.TestCase):
         with open("test.csv") as csvfile:
             reader = csv.reader(csvfile)
             csv_lines = list(reader)
-        self.assertListEqual(lines, csv_lines)
+        self.assertListEqual(sorted(lines), sorted(csv_lines))
 
     def tearDown(self):
         self.db.execute("DROP TABLE test")
