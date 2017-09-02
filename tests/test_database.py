@@ -1,8 +1,10 @@
 import unittest
 import os
 import csv
+import json
 import io
 import sys
+import operator
 from dbase import Database
 
 
@@ -159,6 +161,53 @@ class DatabaseTests(unittest.TestCase):
     #    self.assertListEqual(lines[0], csv_lines[0])
     #    self.assertListEqual(sorted(lines), sorted(csv_lines))
 
+    def test_query_to_file_csv(self):
+        lines = [
+              ["id", "name", "age"],
+              ["1", "dog", "10"],
+              ["2", "cat", "20"],
+              ["3", "man", "30"],
+              ["4", "rat", ""]
+        ]
+
+        for row in self.rows:
+            self.db.execute("INSERT INTO test(name, age) VALUES(?, ?)",
+                            row["name"], row["age"])
+
+        self.db.cur.execute("SELECT * FROM test ORDER BY id")
+        result = self.db.cur.fetchall()
+        rows = [dict(r) for r in result]
+        fieldnames = rows[0].keys()
+        self.db.query_to_file(fieldnames, rows, "csv")
+        with open("query.csv") as csvfile:
+            reader = csv.reader(csvfile)
+            csv_lines = list(reader)
+        self.assertListEqual(lines[0], csv_lines[0])
+        self.assertListEqual(sorted(lines), sorted(csv_lines))
+
+    def test_query_to_file_json(self):
+        lines = [
+                  {"id": 1, "name": "dog", "age": 10},
+                  {"id": 2, "name": "cat", "age": 20},
+                  {"id": 3, "name": "man", "age": 30},
+                  {"id": 4, "name": "rat", "age": None}
+        ]
+
+        for row in self.rows:
+            self.db.execute("INSERT INTO test(name, age) VALUES(?, ?)",
+                            row["name"], row["age"])
+
+        self.db.cur.execute("SELECT * FROM test ORDER BY id")
+        result = self.db.cur.fetchall()
+        rows = [dict(r) for r in result]
+        fieldnames = rows[0].keys()
+        self.db.query_to_file(fieldnames, rows, "json")
+        with open("query.json") as jsonfile:
+            json_data = json.load(jsonfile)
+        sorted_lines = sorted(lines, key=operator.itemgetter("id"))
+        sorted_json = sorted(json_data, key=operator.itemgetter("id"))
+        self.assertListEqual(sorted_json, sorted_lines)
+
     def tearDown(self):
         self.db.execute("DROP TABLE test")
         self.db.execute("DROP TABLE empty_test")
@@ -168,7 +217,8 @@ class DatabaseTests(unittest.TestCase):
         cls.db.execute("DROP TABLE IF EXISTS test")
         cls.db.execute("DROP TABLE IF EXISTS empty_test")
         os.remove("unit_test.db")
-        #os.remove("test.csv")
+        os.remove("query.csv")
+        os.remove("query.json")
 
 
 if __name__ == '__main__':

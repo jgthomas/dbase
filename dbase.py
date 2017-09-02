@@ -1,6 +1,7 @@
 import sqlite3
 import re
 import csv
+import json
 
 
 class Database:
@@ -102,6 +103,25 @@ class Database:
     #            dict_writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
     #            dict_writer.writeheader()
     #            dict_writer.writerows(rows)
+
+    @staticmethod
+    def query_to_file(fieldnames, rows, filetype, outfile=None):
+        def to_csv():
+            with open(outfile, 'w') as csvfile:
+                dict_writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
+                dict_writer.writeheader()
+                dict_writer.writerows(rows)
+
+        def to_json():
+            with open(outfile, 'w') as jsonfile:
+                json.dump(rows, jsonfile)
+
+        filetypes = {"csv": to_csv,
+                     "json": to_json}
+
+        if outfile is None:
+            outfile = ''.join(["query.", filetype])
+        filetypes[filetype]()
 
     def execute(self, statement, *params):
         """ Execute SQL statement, returning appropriately. """
