@@ -149,14 +149,6 @@ class DatabaseTests(unittest.TestCase):
         self.assertEqual(self.db.column_totals("not_test"), not_totals)
         self.assertEqual(self.db.column_totals("empty_test"), empty_totals)
 
-    def test_row_total(self):
-        for row in self.rows:
-            self.db.execute("INSERT INTO test(name, age) VALUES(?, ?)",
-                            row["name"], row["age"])
-        self.assertEqual(self.db.row_total("test"), 4)
-        self.assertEqual(self.db.row_total("not_test"), None)
-        self.assertEqual(self.db.row_total("empty_test"), 0)
-
     def test_to_csv(self):
         lines = [
                   ["id", "name", "age"],

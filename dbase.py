@@ -114,13 +114,6 @@ class Database:
                 column_total_values[column_name] = data["column_total"]
             return column_total_values
 
-    def row_total(self, table):
-        """ Return number of rows in the table. """
-        if self.exists_table(table):
-            result, *_ = self.execute(
-                "SELECT COUNT(*) AS row_total FROM {}".format(table))
-            return result["row_total"]
-
     def to_csv(self, table, outfile=None):
         """ Convert table to csv file. """
         if self.exists_table(table):
