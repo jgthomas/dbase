@@ -74,8 +74,7 @@ class DatabaseTests(unittest.TestCase):
         for row in self.rows:
             self.db.execute("INSERT INTO test(name, age) VALUES(?, ?)",
                             row["name"], row["age"])
-        self.assertEqual(self.db.execute(
-            "DELETE FROM test"), 4)
+        self.assertEqual(self.db.execute("DELETE FROM test"), 4)
 
     def test_exists_table(self):
         self.assertEqual(self.db.exists_table("test"), True)
