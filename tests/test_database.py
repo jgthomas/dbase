@@ -78,6 +78,7 @@ class DatabaseTests(unittest.TestCase):
 
     def test_exists_table(self):
         self.assertEqual(self.db.exists_table("test"), True)
+        self.assertEqual(self.db.exists_table("empty_test"), True)
         self.assertEqual(self.db.exists_table("not_test"), False)
 
     def test_column_names(self):
