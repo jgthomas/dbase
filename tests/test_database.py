@@ -128,7 +128,7 @@ class DatabaseTests(unittest.TestCase):
                   ["2", "cat", "20"],
                   ["3", "man", "30"],
                   ["4", "rat", ""]
-                ]
+        ]
 
         for row in self.rows:
             self.db.execute("INSERT INTO test(name, age) VALUES(?, ?)",
