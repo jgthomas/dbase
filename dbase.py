@@ -87,7 +87,7 @@ class Database:
     def col_names(self, columns):
         return [column["name"] for column in columns]
 
-    def columns(self, table):
+    def column_config(self, table):
         if self.exists_table(table):
             column_data = self.execute("PRAGMA TABLE_INFO({0})".format(table))
             column_names = self.col_names(column_data)

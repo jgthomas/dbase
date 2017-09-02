@@ -103,7 +103,7 @@ class DatabaseTests(unittest.TestCase):
         columns = self.db.execute("PRAGMA TABLE_INFO(not_test)")
         self.assertListEqual(self.db.col_names(columns), [])
 
-    def test_column_summary_method(self):
+    def test_column_config(self):
         summary = {"id": {"cid": 0,
                           "name":"id",
                           "notnull": 0,
@@ -126,9 +126,9 @@ class DatabaseTests(unittest.TestCase):
         for row in self.rows:
             self.db.execute("INSERT INTO test(name, age) VALUES(?, ?)",
                             row["name"], row["age"])
-        self.assertDictEqual(self.db.columns("test"), summary)
-        self.assertDictEqual(self.db.columns("empty_test"), summary)
-        self.assertEqual(self.db.columns("not_test"), None)
+        self.assertDictEqual(self.db.column_config("test"), summary)
+        self.assertDictEqual(self.db.column_config("empty_test"), summary)
+        self.assertEqual(self.db.column_config("not_test"), None)
 
     def test_row_count(self):
         for row in self.rows:
