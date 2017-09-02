@@ -48,7 +48,7 @@ class Database:
                         self.db,
                         self.trace))
 
-    def exists_table(self, table):
+    def _exists_table(self, table):
         """ Check that table exists, guard against SQL injection. """
         query = """SELECT 1
                      FROM sqlite_master
@@ -62,14 +62,14 @@ class Database:
 
     def column_config(self, table):
         """ Return data about columns. """
-        if self.exists_table(table):
+        if self._exists_table(table):
             column_data = self.execute("PRAGMA TABLE_INFO({0})".format(table))
             column_names = self._column_names(column_data)
             return dict(zip(column_names, column_data))
 
     def row_count(self, table):
         """ Return number of rows in the table. """
-        if self.exists_table(table):
+        if self._exists_table(table):
             result, *_ = self.execute(
                 "SELECT COUNT(*) AS row_total FROM {}".format(table))
             return result["row_total"]
@@ -120,6 +120,7 @@ class Database:
             return None
 
     def shell(self):
+        """ Simple sqlite shell for running interactively. """
         welcome = "\nSimple sqlite shell"
         commands = ("\nBuild an SQL statement, or:\n\n"
                     "'quit'  : exit shell\n"
