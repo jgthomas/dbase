@@ -29,12 +29,13 @@ class DatabaseTests(unittest.TestCase):
                 age  INTEGER)""")
 
     def test_select_returns_list_of_row_as_dicts(self):
-        self.assertEqual(self.db.execute("SELECT * FROM test"), [])
         for row in self.rows:
             self.db.execute("INSERT INTO test(name, age) VALUES(?, ?)",
                             row["name"], row["age"])
         self.assertEqual(self.db.execute(
             "SELECT * FROM test ORDER BY id"), self.rows)
+        self.assertEqual(self.db.execute(
+            "SELECT * FROM empty_test ORDER BY id"), [])
 
     def test_insert_returns_last_row_id(self):
         self.assertEqual(self.db.execute(
