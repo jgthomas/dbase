@@ -115,7 +115,7 @@ class Database:
         try:
             filetypes[filetype]()
         except KeyError:
-            print("{0} is unsupported."
+            print("{0} is unsupported. "
                   "Supported filetypes: {1}"
                    .format(filetype, ', '.join(list(filetypes.keys()))))
 
