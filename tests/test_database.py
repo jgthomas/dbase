@@ -38,6 +38,20 @@ class DatabaseTests(unittest.TestCase):
         self.assertEqual(self.db.execute(
             "SELECT * FROM empty_test ORDER BY id"), [])
 
+    def test_select_query_to_csv_file(self):
+        lines = [
+              ["id", "name", "age"],
+              ["3", "man", "30"],
+              ["4", "rat", ""]
+        ]
+
+        self.db.execute("SELECT * FROM test WHERE id>?", 2, outfile="csv")
+        with open("query.csv") as csvfile:
+            reader = csv.reader(csvfile)
+            csv_lines = list(reader)
+        self.assertListEqual(lines[0], csv_lines[0])
+        self.assertListEqual(sorted(lines), sorted(csv_lines))
+
     def test_insert_returns_last_row_id(self):
         self.assertEqual(self.db.execute(
             "INSERT INTO test(name, age) VALUES(?, ?)", "wolf", 23), 5)
