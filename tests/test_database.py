@@ -142,25 +142,6 @@ class DatabaseTests(unittest.TestCase):
         self.assertEqual(self.db.column_totals("not_test"), not_totals)
         self.assertDictEqual(self.db.column_totals("empty_test"), empty_totals)
 
-    #def test_to_csv(self):
-    #    lines = [
-    #              ["id", "name", "age"],
-    #              ["1", "dog", "10"],
-    #              ["2", "cat", "20"],
-    #              ["3", "man", "30"],
-    #              ["4", "rat", ""]
-    #    ]
-
-    #    for row in self.rows:
-    #        self.db.execute("INSERT INTO test(name, age) VALUES(?, ?)",
-    #                        row["name"], row["age"])
-    #    self.db.to_csv("test")
-    #    with open("test.csv") as csvfile:
-    #        reader = csv.reader(csvfile)
-    #        csv_lines = list(reader)
-    #    self.assertListEqual(lines[0], csv_lines[0])
-    #    self.assertListEqual(sorted(lines), sorted(csv_lines))
-
     def test_query_to_file_csv(self):
         lines = [
               ["id", "name", "age"],
@@ -175,10 +156,8 @@ class DatabaseTests(unittest.TestCase):
                             row["name"], row["age"])
 
         self.db.cur.execute("SELECT * FROM test ORDER BY id")
-        result = self.db.cur.fetchall()
-        rows = [dict(r) for r in result]
-        fieldnames = rows[0].keys()
-        self.db.query_to_file(fieldnames, rows, "csv")
+        rows = self.db.cur.fetchall()
+        self.db.query_to_file(rows, "csv")
         with open("query.csv") as csvfile:
             reader = csv.reader(csvfile)
             csv_lines = list(reader)
@@ -198,10 +177,8 @@ class DatabaseTests(unittest.TestCase):
                             row["name"], row["age"])
 
         self.db.cur.execute("SELECT * FROM test ORDER BY id")
-        result = self.db.cur.fetchall()
-        rows = [dict(r) for r in result]
-        fieldnames = rows[0].keys()
-        self.db.query_to_file(fieldnames, rows, "json")
+        rows = self.db.cur.fetchall()
+        self.db.query_to_file(rows, "json")
         with open("query.json") as jsonfile:
             json_data = json.load(jsonfile)
         sorted_lines = sorted(lines, key=operator.itemgetter("id"))

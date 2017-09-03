@@ -92,20 +92,13 @@ class Database:
                 column_total_values[column_name] = data["column_total"]
             return column_total_values
 
-    #def to_csv(self, table, outfile=None):
-    #    """ Convert table to csv file. """
-    #    if self.exists_table(table):
-    #        rows = self.execute("SELECT * FROM {0}".format(table))
-    #        fieldnames = self.column_names(table)
-    #        if not outfile:
-    #            outfile = ''.join([table, ".csv"])
-    #        with open(outfile, 'w') as csvfile:
-    #            dict_writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
-    #            dict_writer.writeheader()
-    #            dict_writer.writerows(rows)
-
     @staticmethod
-    def query_to_file(fieldnames, rows, filetype, outfile=None):
+    def query_to_file(rows, filetype, outfile=None):
+        fieldnames = rows[0].keys()
+        rows = [dict(row) for row in rows]
+        if not outfile:
+            outfile = ''.join(["query.", filetype])
+
         def to_csv():
             with open(outfile, 'w') as csvfile:
                 dict_writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
@@ -119,9 +112,10 @@ class Database:
         filetypes = {"csv": to_csv,
                      "json": to_json}
 
-        if outfile is None:
-            outfile = ''.join(["query.", filetype])
-        filetypes[filetype]()
+        try:
+            filetypes[filetype]()
+        except KeyError:
+            print("Supported filetypes: 'csv', 'json'")
 
     def execute(self, statement, *params):
         """ Execute SQL statement, returning appropriately. """
