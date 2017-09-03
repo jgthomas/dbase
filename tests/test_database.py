@@ -45,7 +45,7 @@ class DatabaseTests(unittest.TestCase):
               ["4", "rat", ""]
         ]
 
-        self.db.execute("SELECT * FROM test WHERE id>?", 2, outfile="csv")
+        self.db.execute("SELECT * FROM test WHERE id>?", 2, filetype="csv")
         with open("query.csv") as csvfile:
             reader = csv.reader(csvfile)
             csv_lines = list(reader)

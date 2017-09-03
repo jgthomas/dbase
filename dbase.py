@@ -94,6 +94,14 @@ class Database:
 
     @staticmethod
     def query_to_file(rows, filetype, outfile=None):
+        """
+        Return a query as a file.
+
+        rows     : list of sqlite3.Row objects
+        filetype : filetype to output query result
+        outfile  : name of the output file
+
+        """
         fieldnames = rows[0].keys()
         rows = [dict(row) for row in rows]
         if not outfile:
@@ -120,13 +128,13 @@ class Database:
                   .format(filetype, ', '.join(list(filetypes.keys()))))
             raise e
 
-    def execute(self, statement, *params, outfile=None):
+    def execute(self, statement, *params, filetype=None):
         """
         Execute SQL statement, returning appropriately.
 
         statement : valid SQL query string
         params    : parameters to fill placeholder values in statement
-        outfile   : return the query as a file of this type
+        filetype  : return the query as a file of this type
 
         """
         try:
@@ -134,8 +142,8 @@ class Database:
                 self.cur.execute(statement, params)
                 if re.search(r"^\s*(?:SELECT|PRAGMA)", statement, re.I):
                     rows = self.cur.fetchall()
-                    if outfile:
-                        self.query_to_file(rows, outfile)
+                    if filetype:
+                        self.query_to_file(rows, filetype)
                     else:
                         return [dict(row) for row in rows]
                 elif re.search(r"^\s*(?:INSERT|REPLACE)", statement, re.I):
