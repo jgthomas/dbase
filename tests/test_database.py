@@ -2,8 +2,6 @@ import unittest
 import os
 import csv
 import json
-import io
-import sys
 import operator
 from dbase import Database
 
@@ -30,11 +28,11 @@ class DatabaseTests(unittest.TestCase):
                 id   INTEGER PRIMARY KEY,
                 name TEXT,
                 age  INTEGER)""")
-
-    def test_select_returns_list_of_row_as_dicts(self):
         for row in self.rows:
             self.db.execute("INSERT INTO test(name, age) VALUES(?, ?)",
                             row["name"], row["age"])
+
+    def test_select_returns_list_of_row_as_dicts(self):
         self.assertEqual(self.db.execute(
             "SELECT * FROM test ORDER BY id"), self.rows)
         self.assertEqual(self.db.execute(
@@ -42,15 +40,12 @@ class DatabaseTests(unittest.TestCase):
 
     def test_insert_returns_last_row_id(self):
         self.assertEqual(self.db.execute(
-            "INSERT INTO test(name, age) VALUES(?, ?)", "wolf", 23), 1)
+            "INSERT INTO test(name, age) VALUES(?, ?)", "wolf", 23), 5)
         self.assertEqual(self.db.execute(
-            "INSERT INTO test(name, age) VALUES(?, ?)", "tiger", 12), 2)
+            "INSERT INTO test(name, age) VALUES(?, ?)", "tiger", 12), 6)
 
     def test_replace_returns_last_row_id(self):
         """ REPLACE allows deletion and insertion of changed indexed values. """
-        for row in self.rows:
-            self.db.execute("INSERT INTO test(name, age) VALUES(?, ?)",
-                            row["name"], row["age"])
         self.db.execute("CREATE UNIQUE INDEX idx_name ON test(name)")
         self.assertEqual(self.db.execute(
             "INSERT INTO test(name, age) VALUES(?, ?)", "man", 100), None)
@@ -60,23 +55,14 @@ class DatabaseTests(unittest.TestCase):
             "SELECT age FROM test WHERE name=?", "man"), [{"age": 100}])
 
     def test_update_returns_affected_row_count(self):
-        for row in self.rows:
-            self.db.execute("INSERT INTO test(name, age) VALUES(?, ?)",
-                            row["name"], row["age"])
         self.assertEqual(self.db.execute(
             "UPDATE test SET name=? WHERE id>?", 'puff', 1), 3)
 
     def test_delete_returns_affected_row_count(self):
-        for row in self.rows:
-            self.db.execute("INSERT INTO test(name, age) VALUES(?, ?)",
-                            row["name"], row["age"])
         self.assertEqual(self.db.execute(
             "DELETE FROM test WHERE id>?", 1), 3)
 
     def test_delete_all(self):
-        for row in self.rows:
-            self.db.execute("INSERT INTO test(name, age) VALUES(?, ?)",
-                            row["name"], row["age"])
         self.assertEqual(self.db.execute("DELETE FROM test"), 4)
 
     def test_exists_table(self):
@@ -86,9 +72,6 @@ class DatabaseTests(unittest.TestCase):
 
     def test_column_names(self):
         column_names = ["id", "name", "age"]
-        for row in self.rows:
-            self.db.execute("INSERT INTO test(name, age) VALUES(?, ?)",
-                            row["name"], row["age"])
         columns = self.db.execute("PRAGMA TABLE_INFO(test)")
         self.assertListEqual(self.db._column_names(columns), column_names)
         columns = self.db.execute("PRAGMA TABLE_INFO(empty_test)")
@@ -116,17 +99,11 @@ class DatabaseTests(unittest.TestCase):
                            "dflt_value": None,
                            "pk": 0}
                    }
-        for row in self.rows:
-            self.db.execute("INSERT INTO test(name, age) VALUES(?, ?)",
-                            row["name"], row["age"])
         self.assertDictEqual(self.db.column_config("test"), summary)
         self.assertDictEqual(self.db.column_config("empty_test"), summary)
         self.assertEqual(self.db.column_config("not_test"), None)
 
     def test_row_count(self):
-        for row in self.rows:
-            self.db.execute("INSERT INTO test(name, age) VALUES(?, ?)",
-                            row["name"], row["age"])
         self.assertEqual(self.db.row_count("test"), 4)
         self.assertEqual(self.db.row_count("not_test"), None)
         self.assertEqual(self.db.row_count("empty_test"), 0)
@@ -135,9 +112,6 @@ class DatabaseTests(unittest.TestCase):
         totals = {"id": 4, "name": 4, "age": 3}
         not_totals = None
         empty_totals = {"id": 0, "name": 0, "age": 0}
-        for row in self.rows:
-            self.db.execute("INSERT INTO test(name, age) VALUES(?, ?)",
-                            row["name"], row["age"])
         self.assertDictEqual(self.db.column_totals("test"), totals)
         self.assertEqual(self.db.column_totals("not_test"), not_totals)
         self.assertDictEqual(self.db.column_totals("empty_test"), empty_totals)
@@ -150,10 +124,6 @@ class DatabaseTests(unittest.TestCase):
               ["3", "man", "30"],
               ["4", "rat", ""]
         ]
-
-        for row in self.rows:
-            self.db.execute("INSERT INTO test(name, age) VALUES(?, ?)",
-                            row["name"], row["age"])
 
         self.db.cur.execute("SELECT * FROM test ORDER BY id")
         rows = self.db.cur.fetchall()
@@ -172,10 +142,6 @@ class DatabaseTests(unittest.TestCase):
                   {"id": 4, "name": "rat", "age": None}
         ]
 
-        for row in self.rows:
-            self.db.execute("INSERT INTO test(name, age) VALUES(?, ?)",
-                            row["name"], row["age"])
-
         self.db.cur.execute("SELECT * FROM test ORDER BY id")
         rows = self.db.cur.fetchall()
         self.db.query_to_file(rows, "json")
@@ -186,10 +152,6 @@ class DatabaseTests(unittest.TestCase):
         self.assertListEqual(sorted_json, sorted_lines)
 
     def test_query_to_file_unknown_type(self):
-        for row in self.rows:
-            self.db.execute("INSERT INTO test(name, age) VALUES(?, ?)",
-                            row["name"], row["age"])
-
         self.db.cur.execute("SELECT * FROM test ORDER BY id")
         rows = self.db.cur.fetchall()
         with self.assertRaises(KeyError):
