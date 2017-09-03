@@ -185,15 +185,15 @@ class DatabaseTests(unittest.TestCase):
         sorted_json = sorted(json_data, key=operator.itemgetter("id"))
         self.assertListEqual(sorted_json, sorted_lines)
 
-    #def test_query_to_file_unknown_type(self):
-    #    for row in self.rows:
-    #        self.db.execute("INSERT INTO test(name, age) VALUES(?, ?)",
-    #                        row["name"], row["age"])
+    def test_query_to_file_unknown_type(self):
+        for row in self.rows:
+            self.db.execute("INSERT INTO test(name, age) VALUES(?, ?)",
+                            row["name"], row["age"])
 
-    #    self.db.cur.execute("SELECT * FROM test ORDER BY id")
-    #    rows = self.db.cur.fetchall()
-    #    self.db.query_to_file(rows, "unsupported")
-
+        self.db.cur.execute("SELECT * FROM test ORDER BY id")
+        rows = self.db.cur.fetchall()
+        with self.assertRaises(KeyError):
+            self.db.query_to_file(rows, "unsupported")
 
     def tearDown(self):
         self.db.execute("DROP TABLE test")

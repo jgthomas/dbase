@@ -114,10 +114,11 @@ class Database:
 
         try:
             filetypes[filetype]()
-        except KeyError:
-            print("{0} is unsupported. "
+        except KeyError as e:
+            print("'{0}' is not a recognised filetype. "
                   "Supported filetypes: {1}"
                    .format(filetype, ', '.join(list(filetypes.keys()))))
+            raise e
 
     def execute(self, statement, *params):
         """ Execute SQL statement, returning appropriately. """
