@@ -121,7 +121,14 @@ class Database:
             raise e
 
     def execute(self, statement, *params, outfile=None):
-        """ Execute SQL statement, returning appropriately. """
+        """
+        Execute SQL statement, returning appropriately.
+
+        statement : valid SQL query string
+        params    : parameters to fill placeholder values in statement
+        outfile   : return the query as a file of this type
+
+        """
         try:
             with self.conn:
                 self.cur.execute(statement, params)
