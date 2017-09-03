@@ -64,6 +64,7 @@ class DatabaseTests(unittest.TestCase):
 
     def test_delete_all(self):
         self.assertEqual(self.db.execute("DELETE FROM test"), 4)
+        self.assertEqual(self.db.execute("DELETE FROM empty_test"), 0)
 
     def test_exists_table(self):
         self.assertEqual(self.db._exists_table("test"), True)
