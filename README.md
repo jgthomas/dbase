@@ -7,9 +7,9 @@ Collects together a number of useful python sqlite features:
 
 * context manager for the database connection
 
-* execute method for returning appropriately from different types of query
+* returns values appropriate for different types of query
 
-* selected row data accessible through key-value pairs, rather than by index
+* row data accessible through key-value pairs, rather than by index
 
 * methods for reporting the characteristics of a table's rows and columns
 
