@@ -13,7 +13,7 @@ Collects together a number of useful python sqlite features:
 
 * range of methods for reporting the characteristics of a table's rows and columns
 
-* convert table to csv file
+* return query as in csv or json format
 
 * simple sqlite shell for running interactively
 
