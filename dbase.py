@@ -120,14 +120,17 @@ class Database:
                    .format(filetype, ', '.join(list(filetypes.keys()))))
             raise e
 
-    def execute(self, statement, *params):
+    def execute(self, statement, *params, outfile=None):
         """ Execute SQL statement, returning appropriately. """
         try:
             with self.conn:
                 self.cur.execute(statement, params)
                 if re.search(r"^\s*(?:SELECT|PRAGMA)", statement, re.I):
                     rows = self.cur.fetchall()
-                    return [dict(row) for row in rows]
+                    if outfile:
+                        self.query_to_file(rows, outfile)
+                    else:
+                        return [dict(row) for row in rows]
                 elif re.search(r"^\s*(?:INSERT|REPLACE)", statement, re.I):
                     return self.cur.lastrowid
                 elif re.search(r"^\s*(?:DELETE|UPDATE)", statement, re.I):
@@ -135,6 +138,10 @@ class Database:
                 return True
         except sqlite3.IntegrityError:
             return None
+
+    def as_json(self, statement, *params):
+        """ Return query as a json string. """
+        return json.dumps(self.execute(statement, *params))
 
     def shell(self):
         """ Simple sqlite shell for running interactively. """

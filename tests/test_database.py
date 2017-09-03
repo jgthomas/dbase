@@ -158,6 +158,11 @@ class DatabaseTests(unittest.TestCase):
         with self.assertRaises(KeyError):
             self.db.query_to_file(rows, "unsupported")
 
+    def test_as_json(self):
+        json_ref = '[{"id": 1, "name": "dog", "age": 10}]'
+        json_object = self.db.as_json("SELECT * FROM test WHERE id=?", 1)
+        self.assertEqual(json_ref, json_object)
+
     def tearDown(self):
         self.db.execute("DROP TABLE test")
         self.db.execute("DROP TABLE empty_test")
