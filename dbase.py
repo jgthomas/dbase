@@ -117,7 +117,7 @@ class Database:
         except KeyError as e:
             print("'{0}' is not a recognised filetype. "
                   "Supported filetypes: {1}"
-                   .format(filetype, ', '.join(list(filetypes.keys()))))
+                  .format(filetype, ', '.join(list(filetypes.keys()))))
             raise e
 
     def execute(self, statement, *params, outfile=None):
