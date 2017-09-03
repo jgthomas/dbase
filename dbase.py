@@ -104,6 +104,7 @@ class Database:
         """
         fieldnames = rows[0].keys()
         rows = [dict(row) for row in rows]
+
         if not outfile:
             outfile = ''.join(["query.", filetype])
 
