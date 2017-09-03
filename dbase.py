@@ -115,7 +115,9 @@ class Database:
         try:
             filetypes[filetype]()
         except KeyError:
-            print("Supported filetypes: 'csv', 'json'")
+            print("{0} is unsupported."
+                  "Supported filetypes: {1}"
+                   .format(filetype, ', '.join(list(filetypes.keys()))))
 
     def execute(self, statement, *params):
         """ Execute SQL statement, returning appropriately. """
